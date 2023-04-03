@@ -1,0 +1,130 @@
+---
+title: "Week 3 HW"
+author: "Kamilla G."
+date: "2023-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+"Learn how to Subset, call specific some what random observations"
+source("http://www.openintro.org/stat/data/cdc.R")
+```
+
+Show me the 567th row and provide me with the weight 
+(6th variable)
+```{r}
+cat(colnames(cdc))
+cat( cdc[567,]$weight )
+```
+
+Show me the range 1 to 10 in the 6th variable
+```{r}
+cat( cdc[1:10, 6] )
+```
+
+Subsetting
+```{r}
+
+```
+
+Checking subset
+#Notes 
+
+How many men do we have in the cdc dataset?
+```{r}
+cat( dim(subset(cdc, gender=="m"))[1] )
+```
+
+What are another 2 ways we can find how many men are in the datasets? 
+Using cdc then mdata?
+```{r}
+cat( dim(cdc[cdc$gender=="m",])[1] )
+
+mdata <- cdc[ which(cdc$gender=="m"), ]
+cat( dim(mdata)[1] )
+```
+
+I want to know the observation details of men over 30.
+```{r}
+cat("Men over 30 details")
+summary( subset(cdc, gender=="m" & age>30) )
+```
+
+I want to know the observation details of men equal to and over 30.
+```{r}
+cat("Men 30 and over details")
+summary( subset(cdc, gender=="m" & age>=30) )
+```
+
+What is the mean age of men in this data set?
+```{r}
+mdata = subset(cdc, gender=="m")
+cat(mean(mdata$age))
+```
+
+Is this data set positively or negatively skewed?
+#Notes
+
+```{r}
+amean = mean(mdata$age)
+amedian = median(mdata$age)
+if(amean>amedian) {
+  cat("positively skewed")
+} else if(amean<amedian) {
+  cat("negaitvely skewed")
+} else {
+  cat("symmetric")
+}
+```
+
+Let's look at a comparison of men's current weight vs desired weight
+```{r}
+plot(mdata$weight, col='blue', pch=19, ylab="weight")
+points(mdata$wtdesire, col='green', pch=19)
+legend("topleft", 25, pch=c(19, 19), legend=c("actual weight", "desired weight"), col=c("blue", 'green'))
+cat()
+```
+Lets take a moment to look at the outliers
+#Notes
+
+
+Noticed the output: What if I asked to show the general health, weight and weight desired of any of the outliers
+```{r}
+weightOut <- boxplot.stats(mdata$weight)$out
+weightOutRows <- which(mdata$weight %in% c(weightOut))
+wtdesireOut <- boxplot.stats(mdata$wtdesire)$out
+wtdesireOutRows <- which(mdata$wtdesire %in% c(wtdesireOut))
+outRows = unique(union(weightOutRows, wtdesireOutRows))
+data = mdata[outRows,c("genhlth","weight","wtdesire")]
+summary(data)
+```
+Lets remove the outliers
+```{r}
+mdata[outRows,"weight"]=NA
+cat( dim(mdata)[1] )
+mdata = na.omit(mdata)
+cat( dim(mdata)[1] )
+```
+Plot the new data set can we see more of the detail?
+```{r}
+plot(mdata$weight, col='blue', pch=19, ylab="weight")
+points(mdata$wtdesire, col='green', pch=19)
+legend("topleft", 25, pch=c(19, 19), legend=c("actual weight", "desired weight"), col=c("blue", 'green'))
+cat()
+```
+Can we positively say that the variables have a positive association?
+#Notes
+
+
+Let's add a linear regression model and make it red to see better
+#Notes
+
+Changing graph appearance by doing several things
+
+More functions to change the appearence of graphs
+https://www.w3schools.com/r/r_graph_plot.asp 
+Saving Graphs 
+#Notes
+
+
